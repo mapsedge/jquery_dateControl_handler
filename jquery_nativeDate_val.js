@@ -1,0 +1,49 @@
+!function(e) {
+	const t = e.fn.val;
+	e.fn.val = function(e) {
+		function n(e) {
+			return e instanceof Date && !isNaN(e) ? e.toISOString().split("T")[0] : "";
+		}
+		if (void 0 === e) {
+			if (this.is("input[type='date']")) {
+				return function(e) {
+					const t = e.split("-");
+					return 3 !== t.length ? "" : `${t[1]}/${t[2]}/${t[0]}`;
+				}(t.call(this));
+			}
+			return t.call(this);
+		}
+		if (this.is("input[type='date']")) {
+			let a = "";
+			if ("today" === e || "now" === e) {
+				a = n(new Date);
+			} else if ("first" === e) {
+				a = n(new Date((new Date).getFullYear(), (new Date).getMonth(), 1));
+			} else if ("prevfirst" === e) {
+				a = n(new Date((new Date).getFullYear(), (new Date).getMonth() - 1, 1));
+			} else if ("prevlast" === e) {
+				a = n(new Date((new Date).getFullYear(), (new Date).getMonth(), 0));
+				// m yConsole.add("[592852] formattedValue", a);
+			} else if ("tomorrow" === e) {
+				const e = new Date;
+				e.setDate(e.getDate() + 1), a = n(e);
+			} else if ("yesterday" === e) {
+				const e = new Date;
+				e.setDate(e.getDate() - 1), a = n(e);
+			} else if ("" === e) {
+				a = "";
+			} else if (/^[+-]\d+[dmy]$/.test(e)) {
+				const t = new Date, s = parseInt(e.slice(1), 10), i = e.slice(-1);
+				"d" === i ? t.setDate(t.getDate() + (e.startsWith("+") ? s : -s)) :
+				"m" === i ? t.setMonth(t.getMonth() + (e.startsWith("+") ? s : -s)) :
+				"y" === i && t.setFullYear(t.getFullYear() + (e.startsWith("+") ? s : -s)),
+				a = n(t);
+			} else {
+				a = n(new Date(e));
+			}
+			return t.call(this, a);
+		}
+		return t.call(this, e);
+	}
+
+}(jQuery);
